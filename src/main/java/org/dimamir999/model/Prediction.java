@@ -9,6 +9,16 @@ public class Prediction {
     @JsonProperty(value = "winFirstProbability")
     private double probabilityWinPlayer1;
 
+    public Prediction(double probabilityFirstWin) {
+        if(probabilityFirstWin < 0) {
+            throw new IllegalArgumentException("Negative probability.");
+        }
+        if (probabilityFirstWin > 1) {
+            throw new IllegalArgumentException("Probability is above 1.");
+        }
+        this.probabilityWinPlayer1 = probabilityFirstWin;
+    }
+
     public TennisPlayer getPlayer1() {
         return player1;
     }
@@ -27,6 +37,10 @@ public class Prediction {
 
     public double getProbabilityWinPlayer1() {
         return probabilityWinPlayer1;
+    }
+
+    public double getProbabilityWinPlayer2() {
+        return 1 - probabilityWinPlayer1;
     }
 
     public void setProbabilityWinPlayer1(double probabilityWinPlayer1) {
