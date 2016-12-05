@@ -17,7 +17,6 @@ public class ConsoleAppExecutor {
     private BufferedReader processOutput;
     private BufferedReader processOutputError;
 
-    public ConsoleAppExecutor() {}
     public ConsoleAppExecutor(String startCommand) {
         this.startCommand = startCommand;
     }
