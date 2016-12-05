@@ -1,11 +1,12 @@
 package org.dimamir999.controller;
 
+import org.dimamir999.model.Match;
 import org.dimamir999.model.Prediction;
 import org.dimamir999.model.TennisPlayer;
+import org.dimamir999.model.Tournament;
 import org.dimamir999.service.PlayerService;
 import org.dimamir999.service.PredictionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,8 +30,9 @@ public class ApiController {
     }
 
     @PostMapping("prediction")
-    public Prediction getPrediction(@RequestBody Long player1Id, @RequestBody Long player2Id){
-        return predictionService.makePredoction(player1Id, player2Id);
+    public Prediction getPrediction(@RequestBody Long player1, @RequestBody Long player2,
+                                    @RequestBody Tournament tournament){
+        return predictionService.makePrediction(player1, player2, tournament);
     }
 
 }

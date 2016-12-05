@@ -1,15 +1,17 @@
 from sklearn.externals import joblib
+import json
 
+order = ['atp1', 'atp2']
 model = joblib.load('model.pkl')
 
 while True:
-    player1_info = input()
-    player2_info = input()
+    match_json = input()
+    match_info = json.load(match_json)
+    features = []
+    for feature_name in order:
+        features.append(match_info[feature_name])
 
-    atp1 = 1206
-    atp2 = 3497
+    probability = model.predict_proba([features])
 
-    probability = model.predict_proba([[atp1, atp2]])
-
-    print(probability)
+    print(probability[0])
 

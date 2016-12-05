@@ -1,11 +1,14 @@
 package org.dimamir999.service;
 
+import org.springframework.stereotype.Component;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
+@Component
 public class ConsoleAppExecutor {
 
     private String startCommand;

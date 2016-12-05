@@ -1,13 +1,17 @@
 package org.dimamir999.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
-public class Prediction {
+public class Match {
 
+    @JsonUnwrapped
+    private Tournament tournament;
+
+    @JsonUnwrapped(suffix = "1")
     private TennisPlayer player1;
+
+    @JsonUnwrapped(suffix = "2")
     private TennisPlayer player2;
-    @JsonProperty(value = "winFirstProbability")
-    private double probabilityWinPlayer1;
 
     public TennisPlayer getPlayer1() {
         return player1;
@@ -25,11 +29,11 @@ public class Prediction {
         this.player2 = player2;
     }
 
-    public double getProbabilityWinPlayer1() {
-        return probabilityWinPlayer1;
+    public Tournament getTournament() {
+        return tournament;
     }
 
-    public void setProbabilityWinPlayer1(double probabilityWinPlayer1) {
-        this.probabilityWinPlayer1 = probabilityWinPlayer1;
+    public void setTournament(Tournament tournament) {
+        this.tournament = tournament;
     }
 }

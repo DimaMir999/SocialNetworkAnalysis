@@ -1,5 +1,8 @@
 package org.dimamir999.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,13 +16,20 @@ public class TennisPlayer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonProperty(value = "player")
     private Long id;
 
     @Column(name = "name", length = 32)
+    @JsonIgnore
     private String name;
 
     @Column(name = "surname", length = 32)
+    @JsonIgnore
     private String surname;
+
+    @Column(name = "atp")
+    @JsonProperty(value = "atp")
+    private Double atpRank;
 
     public String getName() {
         return name;
@@ -43,6 +53,14 @@ public class TennisPlayer {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Double getAtpRank() {
+        return atpRank;
+    }
+
+    public void setAtpRank(Double atpRank) {
+        this.atpRank = atpRank;
     }
 
     @Override
