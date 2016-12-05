@@ -52,7 +52,6 @@ public class PredictionServiceTest {
     public void makePrediction() throws Exception {
         when(playerDao.getPlayerById(1L)).thenReturn(new TennisPlayer());
         when(playerDao.getPlayerById(2L)).thenReturn(new TennisPlayer());
-        doNothing().when(consoleAppExecutor).sendToApplication(anyString(), anyBoolean());
         when(consoleAppExecutor.getLineFromApplication()).thenReturn("");
         when(objectMapper.readValue("", Prediction.class)).thenReturn(new Prediction(0.2));
         Prediction prediction = predictionService.makePrediction(1L, 2L, new Tournament());
