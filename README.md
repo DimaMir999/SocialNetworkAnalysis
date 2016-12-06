@@ -1,7 +1,5 @@
-# SocialNetworkAnalysis
-Super description1
 
-## Required software:
+# Required software:
 This project uses Maven as build system.
 
 # Prerequisites:

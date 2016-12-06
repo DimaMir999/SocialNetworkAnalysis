@@ -38,11 +38,6 @@ public class PredictionServiceTest {
     @InjectMocks
     private PredictionService predictionService;
 
-    @Before
-    public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-    }
-
     @Test
     public void testGetPlayersWithCorrectParamsExpectOk(){
     }
