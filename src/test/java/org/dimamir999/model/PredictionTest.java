@@ -14,12 +14,12 @@ public class PredictionTest {
 
     @Test
     public void probabilityFirstWin() throws Exception {
-        assertEquals(0.2, prediction.getProbabilityFirstWin(), 0.01);
+        assertEquals(0.2, prediction.getProbabilityWinPlayer1(), 0.01);
     }
 
     @Test
     public void probabilitySecondWin() throws Exception {
-        assertEquals(0.8, prediction.getProbabilitySecondWin(), 0.01);
+        assertEquals(0.8, prediction.getProbabilityWinPlayer2(), 0.01);
     }
 
     @Test(expected = IllegalArgumentException.class)
