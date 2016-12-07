@@ -46,4 +46,27 @@ public class Prediction {
     public void setProbabilityWinPlayer1(double probabilityWinPlayer1) {
         this.probabilityWinPlayer1 = probabilityWinPlayer1;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Prediction that = (Prediction) o;
+
+        if (Double.compare(that.probabilityWinPlayer1, probabilityWinPlayer1) != 0) return false;
+        if (!player1.equals(that.player1)) return false;
+        return player2.equals(that.player2);
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = player1.hashCode();
+        result = 31 * result + player2.hashCode();
+        temp = Double.doubleToLongBits(probabilityWinPlayer1);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
 }

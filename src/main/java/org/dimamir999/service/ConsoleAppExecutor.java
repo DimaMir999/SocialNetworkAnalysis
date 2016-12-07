@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-@Component
 public class ConsoleAppExecutor {
 
     private String startCommand;
@@ -17,7 +16,6 @@ public class ConsoleAppExecutor {
     private BufferedReader processOutput;
     private BufferedReader processOutputError;
 
-    public ConsoleAppExecutor() {}
     public ConsoleAppExecutor(String startCommand) {
         this.startCommand = startCommand;
     }

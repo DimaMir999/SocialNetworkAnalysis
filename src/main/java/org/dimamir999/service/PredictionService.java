@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Service
 public class PredictionService {
@@ -20,8 +21,7 @@ public class PredictionService {
     @Autowired
     private PlayerDao playerDao;
 
-    @Autowired
-    private ConsoleAppExecutor consoleAppExecutor;
+    private ConsoleAppExecutor consoleAppExecutor = new ConsoleAppExecutor(PYTHON_PREDICTION_APP_NAME);
     private ObjectMapper jsonMapper = new ObjectMapper();
 
     public Prediction makePrediction(Match match){
@@ -37,19 +37,26 @@ public class PredictionService {
         } catch (IOException e){
             e.printStackTrace();
         }
+        if(prediction != null) {
+            prediction.setPlayer1(match.getPlayer1());
+            prediction.setPlayer2(match.getPlayer2());
+        }
         return prediction;
     }
 
     public Prediction makePrediction(Long player1Id, Long player2Id, Tournament tournament){
+        Objects.requireNonNull(tournament);
+        Objects.requireNonNull(player1Id);
+        Objects.requireNonNull(player2Id);
         TennisPlayer player1 = playerDao.getPlayerById(player1Id);
+        Objects.requireNonNull(player1);
         TennisPlayer player2 = playerDao.getPlayerById(player2Id);
+        Objects.requireNonNull(player2);
         Match match = new Match();
         match.setPlayer1(player1);
         match.setPlayer2(player2);
         match.setTournament(tournament);
         Prediction prediction = makePrediction(match);
-        prediction.setPlayer1(player1);
-        prediction.setPlayer2(player2);
         return prediction;
     }
 }
