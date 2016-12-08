@@ -10,6 +10,7 @@ import org.dimamir999.model.Tournament;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -22,7 +23,14 @@ public class PredictionService {
     private PlayerDao playerDao;
 
     private ConsoleAppExecutor consoleAppExecutor = new ConsoleAppExecutor(PYTHON_PREDICTION_APP_NAME);
-    private ObjectMapper jsonMapper = new ObjectMapper();
+
+    @Autowired
+    private ObjectMapper jsonMapper;
+
+    @PostConstruct
+    public void init() throws IOException {
+        consoleAppExecutor.startApplication();
+    }
 
     public Prediction makePrediction(Match match){
         String matchJSON, predictionJSON;

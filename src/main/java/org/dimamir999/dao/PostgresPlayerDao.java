@@ -8,20 +8,14 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
 public class PostgresPlayerDao implements PlayerDao {
 
-    @Autowired
-    private EntityManagerFactory entityManagerFactory;
-
+    @PersistenceContext
     private EntityManager entityManager;
-
-    @PostConstruct
-    public void initEntityManager(){
-        entityManager = entityManagerFactory.createEntityManager();
-    }
 
     public TennisPlayer getPlayerById(Long id){
         TennisPlayer player = entityManager.find(TennisPlayer.class, id);

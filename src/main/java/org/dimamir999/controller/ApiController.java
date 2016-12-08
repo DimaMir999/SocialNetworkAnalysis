@@ -1,5 +1,8 @@
 package org.dimamir999.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.dimamir999.model.Match;
 import org.dimamir999.model.Prediction;
 import org.dimamir999.model.TennisPlayer;
@@ -19,6 +22,9 @@ import java.util.List;
 public class ApiController {
 
     @Autowired
+    public ObjectMapper jsonMapper;
+
+    @Autowired
     private PlayerService playerService;
 
     @Autowired
@@ -30,8 +36,10 @@ public class ApiController {
     }
 
     @PostMapping("prediction")
-    public Prediction getPrediction(@RequestBody Long player1, @RequestBody Long player2,
-                                    @RequestBody Tournament tournament){
+    public Prediction getPrediction(@RequestBody ObjectNode json) throws JsonProcessingException {
+        Long player1 = json.get("player1").asLong();
+        Long player2 = json.get("player2").asLong();
+        Tournament tournament = jsonMapper.treeToValue(json.get("tournament"), Tournament.class);
         return predictionService.makePrediction(player1, player2, tournament);
     }
 
