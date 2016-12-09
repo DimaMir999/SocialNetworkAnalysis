@@ -8,6 +8,7 @@ import org.dimamir999.model.Prediction;
 import org.dimamir999.model.TennisPlayer;
 import org.dimamir999.model.Tournament;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -17,12 +18,12 @@ import java.util.Objects;
 @Service
 public class PredictionService {
 
-    private final static String PYTHON_PREDICTION_APP_NAME = "python3 predict.py";
-
     @Autowired
     private PlayerDao playerDao;
 
-    private ConsoleAppExecutor consoleAppExecutor = new ConsoleAppExecutor(PYTHON_PREDICTION_APP_NAME);
+    @Autowired
+    @Qualifier("predictScript")
+    private ConsoleAppExecutor consoleAppExecutor;
 
     @Autowired
     private ObjectMapper jsonMapper;

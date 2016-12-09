@@ -1,6 +1,7 @@
 package org.dimamir999.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.dimamir999.service.ConsoleAppExecutor;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -30,6 +31,8 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 		configurer.enable();
 	}
 
+	private final static String[] PYTHON_PREDICTION_APP_NAME = new String[]{"python3", "predict.py"};
+
 	private static final String PROPERTY_NAME_DATABASE_DRIVER = "org.postgresql.Driver";
 	private static final String PROPERTY_NAME_DATABASE_URL = "jdbc:postgresql://localhost:5432/tennis";
 	private static final String PROPERTY_NAME_DATABASE_USERNAME = "postgres";
@@ -39,6 +42,11 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	private static final String PROPERTY_NAME_HIBERNATE_SHOW_SQL = "true";
 	private static final String PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN = "org.dimamir999.model";
 	private static final String PROPERTY_NAME_HIBERNATE_HBM2DDL_AUTO = "update";
+
+	@Bean("predictScript")
+	public ConsoleAppExecutor predictScript(){
+		return new ConsoleAppExecutor(PYTHON_PREDICTION_APP_NAME);
+	}
 
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
