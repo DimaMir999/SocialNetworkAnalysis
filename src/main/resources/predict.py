@@ -13,8 +13,8 @@ while True:
 
     probability = model.predict_proba([features])
 
-    json.dumps({
+    prediction = json.dumps({
         'winFirstProbability': probability[0][1],
         'winSecondProbability': probability[0][0]
     })
-    print(probability[0])
+    print(prediction)
