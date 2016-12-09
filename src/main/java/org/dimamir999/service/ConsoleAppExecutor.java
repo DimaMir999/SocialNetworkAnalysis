@@ -13,16 +13,15 @@ import java.io.OutputStreamWriter;
 
 public class ConsoleAppExecutor {
 
-    @Autowired
-    private ServletContext servletContext;
-
+    private String processDirectory;
     private String[] startCommand;
     private Process process;
     private BufferedWriter processInput;
     private BufferedReader processOutput;
     private BufferedReader processOutputError;
 
-    public ConsoleAppExecutor(String ... startCommand) {
+    public ConsoleAppExecutor(String processDirectory, String ... startCommand) {
+        this.processDirectory = processDirectory;
         this.startCommand = startCommand;
     }
 
@@ -30,7 +29,7 @@ public class ConsoleAppExecutor {
         process = new ProcessBuilder(startCommand).redirectInput(ProcessBuilder.Redirect.PIPE)
                 .redirectOutput(ProcessBuilder.Redirect.PIPE)
                 .redirectError(ProcessBuilder.Redirect.PIPE)
-                .directory(new File(servletContext.getRealPath("/WEB-INF/classes")))
+                .directory(new File(processDirectory))
                 .start();
         processInput = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
         processOutput = new BufferedReader(new InputStreamReader(process.getInputStream()));

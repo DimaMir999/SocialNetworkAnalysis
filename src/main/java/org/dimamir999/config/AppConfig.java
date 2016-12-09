@@ -3,6 +3,7 @@ package org.dimamir999.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.dimamir999.service.ConsoleAppExecutor;
 import org.hibernate.jpa.HibernatePersistenceProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 import java.util.Properties;
 
@@ -25,6 +27,9 @@ import java.util.Properties;
 @EnableTransactionManagement
 @ComponentScan(basePackages = "org.dimamir999")
 public class AppConfig extends WebMvcConfigurerAdapter {
+
+	@Autowired
+	private ServletContext servletContext;
 
 	@Override
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
@@ -45,7 +50,8 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 
 	@Bean("predictScript")
 	public ConsoleAppExecutor predictScript(){
-		return new ConsoleAppExecutor(PYTHON_PREDICTION_APP_NAME);
+		return new ConsoleAppExecutor(servletContext.getRealPath("/WEB-INF/classes"),
+				PYTHON_PREDICTION_APP_NAME);
 	}
 
 	@Bean
