@@ -1,4 +1,3 @@
-
 # Required software:
 This project uses Maven as build system.
 
