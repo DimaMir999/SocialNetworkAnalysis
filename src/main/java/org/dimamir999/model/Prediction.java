@@ -1,13 +1,20 @@
 package org.dimamir999.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Prediction {
 
+    @JsonIgnore
     private TennisPlayer player1;
+    @JsonIgnore
     private TennisPlayer player2;
     @JsonProperty(value = "winFirstProbability")
     private double probabilityWinPlayer1;
+
+    public Prediction() {}
 
     public Prediction(double probabilityFirstWin) {
         if(probabilityFirstWin < 0) {

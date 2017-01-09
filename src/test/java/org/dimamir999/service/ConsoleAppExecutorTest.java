@@ -9,12 +9,11 @@ import static org.junit.Assert.assertEquals;
 
 public class ConsoleAppExecutorTest {
 
-    @Ignore
     @Test
     public void testReadDataFromConsoleApp(){
         String extectedOutput = "test";
-        System.out.println(System.getProperty("user.dir"));
-        ConsoleAppExecutor consoleAppExecutor = new ConsoleAppExecutor(System.getProperty("user.dir"), "echo " + extectedOutput);
+        ConsoleAppExecutor consoleAppExecutor = new ConsoleAppExecutor(System.getProperty("user.dir"),
+                "echo", extectedOutput);
         String output = null;
         try {
             consoleAppExecutor.startApplication();
