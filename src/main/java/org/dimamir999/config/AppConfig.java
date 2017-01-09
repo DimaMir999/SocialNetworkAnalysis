@@ -39,9 +39,9 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 	private final static String[] PYTHON_PREDICTION_APP_NAME = new String[]{"python3", "predict.py"};
 
 	private static final String PROPERTY_NAME_DATABASE_DRIVER = "org.postgresql.Driver";
-	private static final String PROPERTY_NAME_DATABASE_URL = "jdbc:postgresql://localhost:5432/tennis";
-	private static final String PROPERTY_NAME_DATABASE_USERNAME = "postgres";
-	private static final String PROPERTY_NAME_DATABASE_PASSWORD = "postgres";
+	private static final String PROPERTY_NAME_DATABASE_URL = "jdbc:postgresql://postgres:5432/tennis";
+	private static final String PROPERTY_NAME_DATABASE_USERNAME = "admin";
+	private static final String PROPERTY_NAME_DATABASE_PASSWORD = "admin";
 
 	private static final String PROPERTY_NAME_HIBERNATE_DIALECT = "org.hibernate.dialect.PostgreSQL9Dialect";
 	private static final String PROPERTY_NAME_HIBERNATE_SHOW_SQL = "true";

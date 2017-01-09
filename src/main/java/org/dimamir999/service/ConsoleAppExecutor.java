@@ -26,11 +26,14 @@ public class ConsoleAppExecutor {
     }
 
     public void startApplication() throws IOException {
-        process = new ProcessBuilder(startCommand).redirectInput(ProcessBuilder.Redirect.PIPE)
+        ProcessBuilder processBuilder = new ProcessBuilder(startCommand).redirectInput(ProcessBuilder.Redirect.PIPE)
                 .redirectOutput(ProcessBuilder.Redirect.PIPE)
-                .redirectError(ProcessBuilder.Redirect.PIPE)
-                .directory(new File(processDirectory))
-                .start();
+                .redirectError(ProcessBuilder.Redirect.PIPE);
+        if(processDirectory != null && !processDirectory.isEmpty()) {
+            processBuilder = processBuilder.directory(new File(processDirectory));
+        }
+        System.out.println(processBuilder.directory());
+        process = processBuilder.start();
         processInput = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
         processOutput = new BufferedReader(new InputStreamReader(process.getInputStream()));
         processOutputError = new BufferedReader(new InputStreamReader(process.getErrorStream()));

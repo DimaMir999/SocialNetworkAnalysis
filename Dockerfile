@@ -66,9 +66,10 @@ RUN wget http://archive.eclipse.org/jetty/${JETTY_VERSION}.${RELEASE_DATE}/dist/
 RUN rm -rf /opt/jetty/webapps.demo
 
 # Run REST API
-COPY target/tennis.war /opt/jetty/webapps/
+COPY target/tennis.war /opt/jetty/
+COPY jetty-app-config.xml /opt/jetty/webapps/
 WORKDIR /opt/jetty/
-#RUN java -jar start.jar
-#EXPOSE 8080
+
+CMD ["java", "-jar", "start.jar"]
 
 
