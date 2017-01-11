@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div id="selectPlayer1" class="select-container">
+</div>
+<div id="selectPlayer2" class="select-container">
+</div>
+<div class="wraper">
+    <div class="container-fluid head-container">
+        <div class="row">
+            <div class="col-md-4 padding-left">
+                <p class="player-title center-block">Player 1</p>
+                <input type="text" id="inputPlayer1" oninput="onPlayerInput(1)" onfocus="onPlayerInputFocus(1)"
+                       onblur="onPlayerInputBlur(1)" class="center-block"/>
+                <span id="player1-error" class="player-error center-block">*Виберіть гравця з випадаючого списку!</span>
+            </div>
+            <div class="col-md-1">
+                <span id="player1Prediction" class="center-block"></span>
+            </div>
+            <div class="col-md-2">
+                <button class="center-block button-fight">Fight</button>
+            </div>
+            <div class="col-md-1">
+                <span id="player2Prediction" class="center-block"></span>
+            </div>
+            <div class="col-md-4 padding-right">
+                <p class="player-title center-block">Player 2</p>
+                <input type="text" id="inputPlayer2" oninput="onPlayerInput(2)" onfocus="onPlayerInputFocus(2)"
+                       onblur="onPlayerInputBlur(2)" class="center-block"/>
+                <span id="player2-error" class="player-error center-block">*Виберіть гравця з випадаючого списку!</span>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-5">
+                <div class="general-container">
+                    <div class="title-container" id="aboutTitle">
+                        <span>About</span>
+                    </div>
+                    <div class="content-container" id="aboutContent">
+                    <span>
+                        Даний веб-додаток симулює гру між двома тенисистами та повертає ймовірності перемоги кожного з гравців. На гру можуть впливати різні фактори (наприклад тип корту).
+                    </span>
+                    </div>
+                </div>
+                <div class="general-container">
+                    <div class="title-container" id="instructionsTitle">
+                        <span>Instruction</span>
+                    </div>
+                    <div class="content-container" id="instructionsContent">
+                    <span>
+                        1. Почніть вводити ім'я тениниста у полі введення вище.<br>
+                        2. Виберіть з випадаючого списку потрібного вам тенисиста.
+                        Аналогічні дії проведіть з другим гравцем.<br>
+                        3. При необхідності, задайте умови проведення гри в меню налаштування праворуч.<br>
+                        4. Натисніть кнопку "Fight".
+                    </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <h2 class="text-center options-title">Налаштування</h2>
+                <div class="option text-center">
+                    <span class="text-left option-title">Тип корту</span>
+                    <select id="typeOfCort">
+                        <option value="none">Виберіть тип корту:</option>
+                        <option value="soil">Грунт</option>
+                        <option value="grass">Трава</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <span class="text-footer">
+        Інтеграція прорамних систем<br>
+        Робота групи braindead-animals: Миронюк Дмитро, Денік Юрій, Ханевич Андрій, Марченко Олексій.<br>
+        2016-2017
+    </span>
+</footer>
+
+<script src="index.js"></script>
+</body>
+</html>
