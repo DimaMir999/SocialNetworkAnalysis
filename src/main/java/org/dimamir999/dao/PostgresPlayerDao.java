@@ -42,7 +42,7 @@ public class PostgresPlayerDao implements PlayerDao {
         CriteriaQuery<TennisPlayer> query = criteriaBuilder.createQuery(TennisPlayer.class);
         Root<TennisPlayer> rootEntry = query.from(TennisPlayer.class);
         CriteriaQuery<TennisPlayer> all = query.select(rootEntry)
-                .where(criteriaBuilder.like(rootEntry.get("name"),startsWith + "*"));
+                .where(criteriaBuilder.like(rootEntry.get("name"),startsWith + "%"));
         TypedQuery<TennisPlayer> allQuery = entityManager.createQuery(all);
         return allQuery.getResultList();
     }
@@ -53,7 +53,7 @@ public class PostgresPlayerDao implements PlayerDao {
         CriteriaQuery<TennisPlayer> query = criteriaBuilder.createQuery(TennisPlayer.class);
         Root<TennisPlayer> rootEntry = query.from(TennisPlayer.class);
         CriteriaQuery<TennisPlayer> all = query.select(rootEntry)
-                .where(criteriaBuilder.like(rootEntry.get("surname"),startsWith + "*"));
+                .where(criteriaBuilder.like(rootEntry.get("surname"),startsWith + "%"));
         TypedQuery<TennisPlayer> allQuery = entityManager.createQuery(all);
         return allQuery.getResultList();
     }
