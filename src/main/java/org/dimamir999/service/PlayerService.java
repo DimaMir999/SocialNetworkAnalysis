@@ -13,7 +13,11 @@ public class PlayerService {
     @Autowired
     private PlayerDao playerDao;
 
-    public List<TennisPlayer> getPlayersStartsWith(String startsWith, int from, int to){
-        return playerDao.getPlayersStartsWith(startsWith, from, to);
+    public List<TennisPlayer> getPlayersStartsWith(String startsWith){
+        List<TennisPlayer> playersByName = playerDao.getPlayersNameStartsWith(startsWith);
+        List<TennisPlayer> playersBySurname = playerDao.getPlayersSurnameStartsWith(startsWith);
+        List<TennisPlayer> result = playersByName;
+        result.addAll(playersBySurname);
+        return result;
     }
 }

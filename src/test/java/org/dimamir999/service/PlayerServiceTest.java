@@ -1,7 +1,6 @@
 package org.dimamir999.service;
 
 import org.dimamir999.dao.PlayerDao;
-import org.dimamir999.model.TennisPlayer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -22,7 +21,7 @@ public class PlayerServiceTest {
 
     @Test
     public void testGetPlayersExpectInvocationOfDaoWithCorrectParams(){
-        playerService.getPlayersStartsWith("Ra", 0 , 10);
-        verify(playerDao).getPlayersStartsWith("Ra", 0, 10);
+        playerService.getPlayersStartsWith("Ra");
+        verify(playerDao).getPlayersNameStartsWith("Ra");
     }
 }

@@ -10,5 +10,7 @@ public interface PlayerDao {
 
     List<TennisPlayer> getAllPlayers();
 
-    List<TennisPlayer> getPlayersStartsWith(String startsWith, int from, int to);
+    List<TennisPlayer> getPlayersNameStartsWith(String startsWith);
+
+    List<TennisPlayer> getPlayersSurnameStartsWith(String startsWith);
 }

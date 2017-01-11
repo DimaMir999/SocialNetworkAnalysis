@@ -9,6 +9,10 @@ import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 @Repository
@@ -24,11 +28,33 @@ public class PostgresPlayerDao implements PlayerDao {
 
     @Override
     public List<TennisPlayer> getAllPlayers() {
-        return null;
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<TennisPlayer> query = criteriaBuilder.createQuery(TennisPlayer.class);
+        Root<TennisPlayer> rootEntry = query.from(TennisPlayer.class);
+        CriteriaQuery<TennisPlayer> all = query.select(rootEntry);
+        TypedQuery<TennisPlayer> allQuery = entityManager.createQuery(all);
+        return allQuery.getResultList();
     }
 
     @Override
-    public List<TennisPlayer> getPlayersStartsWith(String startsWith, int from, int to) {
-        return null;
+    public List<TennisPlayer> getPlayersNameStartsWith(String startsWith) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<TennisPlayer> query = criteriaBuilder.createQuery(TennisPlayer.class);
+        Root<TennisPlayer> rootEntry = query.from(TennisPlayer.class);
+        CriteriaQuery<TennisPlayer> all = query.select(rootEntry)
+                .where(criteriaBuilder.like(rootEntry.get("name"),startsWith + "*"));
+        TypedQuery<TennisPlayer> allQuery = entityManager.createQuery(all);
+        return allQuery.getResultList();
+    }
+
+    @Override
+    public List<TennisPlayer> getPlayersSurnameStartsWith(String startsWith) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<TennisPlayer> query = criteriaBuilder.createQuery(TennisPlayer.class);
+        Root<TennisPlayer> rootEntry = query.from(TennisPlayer.class);
+        CriteriaQuery<TennisPlayer> all = query.select(rootEntry)
+                .where(criteriaBuilder.like(rootEntry.get("surname"),startsWith + "*"));
+        TypedQuery<TennisPlayer> allQuery = entityManager.createQuery(all);
+        return allQuery.getResultList();
     }
 }

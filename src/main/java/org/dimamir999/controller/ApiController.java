@@ -10,9 +10,11 @@ import org.dimamir999.model.Tournament;
 import org.dimamir999.service.PlayerService;
 import org.dimamir999.service.PredictionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -30,9 +32,9 @@ public class ApiController {
     @Autowired
     private PredictionService predictionService;
 
-    @PostMapping("players")
-    public List<TennisPlayer> getPlayers(@RequestBody String startsWith, @RequestBody int from, @RequestBody int to) {
-        return null;
+    @GetMapping("players")
+    public List<TennisPlayer> getPlayers(@RequestParam String startsWith) {
+        return playerService.getPlayersStartsWith(startsWith);
     }
 
     @PostMapping("prediction")
