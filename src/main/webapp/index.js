@@ -5,8 +5,7 @@ window.onload = function () {
     else {
         var str = localStorage.getItem('players');
         if (str !== '') {
-            localeStoragePlayers = str.split(',');
-            console.log(localeStoragePlayers)
+            localeStoragePlayers = JSON.parse(str);
         }
     }
     var inputPlayer1Pos = $('#inputPlayer1').offset();
@@ -43,7 +42,9 @@ window.onload = function () {
 
 var localeStoragePlayers = [];
 var player1 = undefined, player2 = undefined;
-var responsePlayers = [];
+
+var prediction = undefined;
+var playersResponse = [];
 
 function slideContentContainers() {
     $('#aboutContent').slideToggle();
@@ -53,16 +54,18 @@ function slideContentContainers() {
 function onInputChange() {
     $('#player1Prediction').text('');
     $('#player2Prediction').text('');
+    prediction = undefined;
 }
 
 function getPlayers(startsWith) {
     var options = {
         url: '/api/players?startsWith=' + startsWith,
-        type: 'GET'
+        type: 'GET',
+        contentType: "application/x-www-form-urlencoded"
     };
-    var players;
+
     makeReq(100 + Math.random() * 10, options, function (result) {
-        responsePlayers = JSON.parse(result);
+        playersResponse = result;
     });
 }
 
@@ -71,6 +74,8 @@ function makeReq(delay, options, callback) {
         url: options.url,
         type: options.type,
         data: options.data,
+        async: false,
+        contentType: options.contentType,
         error: function (xhr, status, err) {
             console.log(err.message);
             setTimeout(function () {
@@ -81,34 +86,32 @@ function makeReq(delay, options, callback) {
             }, delay);
         },
         success: function (result, status, xhr) {
-            console.log(result);
             callback(result);
         }
-    });
+    })
 }
 
 function makePrediction(player1, player2, options) {
-    // {"tournament":{"name":"Rolland Garros","surface":"CLAY","court":"OUTDOOR"},"player1":1, "player2":2}
     var reqData = {
-        player1: player1,
-        player2: player2
+        player1: player1.id,
+        player2: player2.id,
+        tournament: {
+            court: "INDOOR",
+            surface: options,
+            name: "fantasy"
+        }
     };
-    if (options) {
-        reqData.options = options;
-    }
 
     var reqOptions = {
-        url: 'api/prediction',
+        url: '/api/prediction',
+        data: JSON.stringify(reqData),
         type: 'POST',
-        data: reqData
+        contentType: 'application/json'
     };
 
-    var predictResult;
-    makeReq(100  + Math.random() * 10, reqOptions, function (result) {
-        predictResult = result;
+    makeReq(100 + Math.random() * 10, reqOptions, function (result) {
+        prediction = Math.round(result.winFirstProbability * 100);
     });
-
-    return 73;
 }
 
 function onPlayerInput(number) {
@@ -116,61 +119,56 @@ function onPlayerInput(number) {
         player1 = undefined;
     }
     else player2 = undefined;
-    // getPlayers(input.value);
-    responsePlayers = [{name: "gerg", surname: "kjgnd"}, {name: "erag", surname: "agaf"}];
-
-    //var unicPlayers = [];
-    //players.forEach(function (item, index, arr) {
-    //    if (localeStoragePlayers.indexOf(item) == -1) {
-    //        unicPlayers.push(item);
-    //    }
-    //});
-    //var selectPlayer = localeStoragePlayers.concat(unicPlayers);
-    buildSelectPlayer(responsePlayers, number);
+    var input = document.getElementById('inputPlayer' + number);
+    getPlayers(input.value);
+//var unicPlayers = [];
+//players.forEach(function (item, index, arr) {
+// if (localeStoragePlayers.indexOf(item) == -1) {
+// unicPlayers.push(item);
+// }
+//});
+//var selectPlayer = localeStoragePlayers.concat(unicPlayers);
+    buildSelectPlayer(playersResponse, number);
 }
 
 function buildSelectPlayer(players, number) {
     $('#selectPlayer' + number).empty();
     var parent = document.getElementById('selectPlayer' + number);
     players.map(function (item, index) {
-        var player = item.name + ' ' + item.surname;
         var div = document.createElement('div');
         div.className = 'div-player';
-        div.appendChild(document.createTextNode(player));
+        div.appendChild(document.createTextNode(item.name + " " + item.surname));
         div.addEventListener('click', function () {
-            onDivPlayerClick(number, player)
+            onDivPlayerClick(number, item)
         });
         parent.appendChild(div);
     })
 }
 
-function onDivPlayerClick(number, item) {
+function onDivPlayerClick(number, playerObj) {
     if (number == 1) {
-        player1 = item;
+        player1 = playerObj;
         $('#player1-error').fadeOut(200);
         $('#inputPlayer1').change();
     }
     else {
-        player2 = item;
+        player2 = playerObj;
         $('#player2-error').fadeOut(200);
         $('#inputPlayer2').change();
     }
-    $('#inputPlayer' + number).val(item);
-    if (!(localeStoragePlayers.indexOf(item) > -1)) {
-        if (localeStoragePlayers.length != 0) {
-            localStorage.setItem('players', localStorage.players + ',' + item);
-        } else {
-            localStorage.setItem('players', item);
-        }
-        localeStoragePlayers.push(item);
+    playersResponse = [];
+    $('#inputPlayer' + number).val(playerObj.name + " " + playerObj.surname);
+    if (!localeStoragePlayers.some(function (elem) {
+            return elem.id === playerObj.id;
+        })) {
+        localeStoragePlayers.push(playerObj);
+        localStorage.setItem('players', JSON.stringify(localeStoragePlayers));
     }
 }
 
 function onPlayerInputFocus(number) {
-    if (localeStoragePlayers.length != 0) {
-        buildSelectPlayer(localeStoragePlayers, number);
-        $('#selectPlayer' + number).slideDown();   
-    }
+    buildSelectPlayer(localeStoragePlayers, number);
+    $('#selectPlayer' + number).slideDown();
 }
 
 function onPlayerInputBlur(number) {
@@ -187,14 +185,12 @@ function onFightButtonClick() {
         return;
     }
 
-    var prediction;
     var typeOfCort = $('#typeOfCort').val();
-    if (typeOfCort != 'none') {
-        var options = {typeOfCort: typeOfCort};
-        prediction = makePrediction(player1, player2, options);
-    }
-    else {
-        prediction = makePrediction(player1, player2);
+    makePrediction(player1, player2, typeOfCort);
+    console.log(prediction);
+    setTimeout(function(){}, 1000);
+    if (prediction === undefined) {
+        return;
     }
 
     var player1Pred = $('#player1Prediction').addClass('player1-Prediction');
@@ -208,5 +204,3 @@ function onFightButtonClick() {
     player1Pred.text(prediction);
     player2Pred.text(100 - prediction);
 }
-
-

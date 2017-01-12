@@ -39,7 +39,7 @@ public class ApiController {
 
     private JsonFactory jsonFactory = new JsonFactory();
 
-    @GetMapping("players")
+    @GetMapping(value = "players", produces = "application/json")
     public String getPlayers(@RequestParam String startsWith) throws IOException {
         List<TennisPlayer> players = playerService.getPlayersStartsWith(startsWith);
         return getJsonString(players);
