@@ -1,5 +1,7 @@
 package org.dimamir999.controller;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -17,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 @RestController
@@ -32,9 +37,12 @@ public class ApiController {
     @Autowired
     private PredictionService predictionService;
 
+    private JsonFactory jsonFactory = new JsonFactory();
+
     @GetMapping("players")
-    public List<TennisPlayer> getPlayers(@RequestParam String startsWith) {
-        return playerService.getPlayersStartsWith(startsWith);
+    public String getPlayers(@RequestParam String startsWith) throws IOException {
+        List<TennisPlayer> players = playerService.getPlayersStartsWith(startsWith);
+        return getJsonString(players);
     }
 
     @PostMapping("prediction")
@@ -45,4 +53,25 @@ public class ApiController {
         return predictionService.makePrediction(player1, player2, tournament);
     }
 
+    private String getJsonString(List<TennisPlayer> players){
+        OutputStream out = new ByteArrayOutputStream();
+        JsonGenerator generator = null;
+        try {
+            generator = jsonFactory.createGenerator(out);
+            generator.writeStartArray();
+            for (TennisPlayer player : players) {
+                generator.writeStartObject();
+                generator.writeNumberField("id", player.getId());
+                generator.writeStringField("name", player.getName());
+                generator.writeStringField("surname", player.getSurname());
+                generator.writeNumberField("atpRank", player.getAtpRank());
+                generator.writeEndObject();
+            }
+            generator.writeEndArray();
+            generator.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return out.toString();
+    }
 }
