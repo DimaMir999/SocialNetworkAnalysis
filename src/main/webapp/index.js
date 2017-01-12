@@ -4,7 +4,10 @@ window.onload = function () {
     }
     else {
         var str = localStorage.getItem('players');
-        localeStoragePlayers = str.split(',');
+        if (str !== '') {
+            localeStoragePlayers = str.split(',');
+            console.log(localeStoragePlayers)
+        }
     }
     var inputPlayer1Pos = $('#inputPlayer1').offset();
     var inputPlayer2Pos = $('#inputPlayer2').offset();
@@ -40,6 +43,7 @@ window.onload = function () {
 
 var localeStoragePlayers = [];
 var player1 = undefined, player2 = undefined;
+var responsePlayers = [];
 
 function slideContentContainers() {
     $('#aboutContent').slideToggle();
@@ -53,21 +57,19 @@ function onInputChange() {
 
 function getPlayers(startsWith) {
     var options = {
-        url: '',
-        data: startsWith
+        url: '/api/players?startsWith=' + startsWith,
+        type: 'GET'
     };
     var players;
-    makePostReq(100 + Math.random() * 10, options, function (result) {
-        players = result;
+    makeReq(100 + Math.random() * 10, options, function (result) {
+        responsePlayers = JSON.parse(result);
     });
-
-    return ['Andy Murray', 'Novak', 'Milos Raonic']
 }
 
-function makePostReq(delay, options, callback) {
+function makeReq(delay, options, callback) {
     $.ajax({
         url: options.url,
-        type: 'POST',
+        type: options.type,
         data: options.data,
         error: function (xhr, status, err) {
             console.log(err.message);
@@ -75,16 +77,18 @@ function makePostReq(delay, options, callback) {
                 var maxDelay = 15 * 60 * 1000, factor = 2, jitter = 0.1;
                 delay = Math.min(delay * factor, maxDelay);
                 delay = delay + Math.random() * delay * jitter;
-                makePostReq(delay, options);
+                makeReq(delay, options, callback);
             }, delay);
         },
         success: function (result, status, xhr) {
+            console.log(result);
             callback(result);
         }
-    })
+    });
 }
 
 function makePrediction(player1, player2, options) {
+    // {"tournament":{"name":"Rolland Garros","surface":"CLAY","court":"OUTDOOR"},"player1":1, "player2":2}
     var reqData = {
         player1: player1,
         player2: player2
@@ -94,12 +98,13 @@ function makePrediction(player1, player2, options) {
     }
 
     var reqOptions = {
-        url: '',
+        url: 'api/prediction',
+        type: 'POST',
         data: reqData
     };
 
     var predictResult;
-    makePostReq(100  + Math.random() * 10, reqOptions, function (result) {
+    makeReq(100  + Math.random() * 10, reqOptions, function (result) {
         predictResult = result;
     });
 
@@ -111,8 +116,9 @@ function onPlayerInput(number) {
         player1 = undefined;
     }
     else player2 = undefined;
-    var input = document.getElementById('inputPlayer' + number);
-    var players = getPlayers(input.value);
+    // getPlayers(input.value);
+    responsePlayers = [{name: "gerg", surname: "kjgnd"}, {name: "erag", surname: "agaf"}];
+
     //var unicPlayers = [];
     //players.forEach(function (item, index, arr) {
     //    if (localeStoragePlayers.indexOf(item) == -1) {
@@ -120,18 +126,19 @@ function onPlayerInput(number) {
     //    }
     //});
     //var selectPlayer = localeStoragePlayers.concat(unicPlayers);
-    buildSelectPlayer(players, number);
+    buildSelectPlayer(responsePlayers, number);
 }
 
 function buildSelectPlayer(players, number) {
     $('#selectPlayer' + number).empty();
     var parent = document.getElementById('selectPlayer' + number);
     players.map(function (item, index) {
+        var player = item.name + ' ' + item.surname;
         var div = document.createElement('div');
         div.className = 'div-player';
-        div.appendChild(document.createTextNode(item));
+        div.appendChild(document.createTextNode(player));
         div.addEventListener('click', function () {
-            onDivPlayerClick(number, item)
+            onDivPlayerClick(number, player)
         });
         parent.appendChild(div);
     })
@@ -150,14 +157,20 @@ function onDivPlayerClick(number, item) {
     }
     $('#inputPlayer' + number).val(item);
     if (!(localeStoragePlayers.indexOf(item) > -1)) {
-        localStorage.setItem('players', localStorage.players + ',' + item);
+        if (localeStoragePlayers.length != 0) {
+            localStorage.setItem('players', localStorage.players + ',' + item);
+        } else {
+            localStorage.setItem('players', item);
+        }
         localeStoragePlayers.push(item);
     }
 }
 
 function onPlayerInputFocus(number) {
-    buildSelectPlayer(localeStoragePlayers, number);
-    $('#selectPlayer' + number).slideDown();
+    if (localeStoragePlayers.length != 0) {
+        buildSelectPlayer(localeStoragePlayers, number);
+        $('#selectPlayer' + number).slideDown();   
+    }
 }
 
 function onPlayerInputBlur(number) {
@@ -165,7 +178,6 @@ function onPlayerInputBlur(number) {
 }
 
 function onFightButtonClick() {
-    console.log(player1, player2);
     if (player1 === undefined) {
         $('#player1-error').css('display', 'block');
         return;
